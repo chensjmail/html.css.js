@@ -1,0 +1,31 @@
+.Wdate, #reportCurrenc{
+	border:#abadb3 1px solid;
+	height:19px;
+	padding: 0 0 0 2px;
+	color:#424242;
+	cursor: pointer;
+	background:#fff url(datePicker.gif) no-repeat right;
+}
+.Wdate::-ms-clear{display:none;}
+
+.WdateFmtErr{
+	font-weight:bold;
+	color:red;
+}
+
+#reportCurrency{
+	float: right;
+	margin-right:10px;
+	margin-top: 6px;
+	height: 21px;
+}
+
+#mockCurrency{
+	float: right;
+	margin-right:10px;
+	margin-top: 6px;
+	height: 21px;
+}
+	
+	
+}

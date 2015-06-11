@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>fixed table title Test</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<script src="../jquery/jquery2.js" type="text/javascript"></script>
+<script>
+	$(function(){
+		setTheadBorder();
+		setTbodyBorder();
+		syncTheadWidth();
+		$(window).resize(function(){
+			syncTheadWidth();
+		});
+	});
+
+	function syncTheadWidth(){
+		var ths= $("#thead_table thead tr:eq(0) > th");
+		jQuery.each(ths, function(index_, th_){
+			if(index_ < (ths.length - 1)){//最后一列不设置
+				var tarTh= $(th_);
+				var srcTd= $("#data_table tbody tr:eq(0) > td:eq(" + index_ + ")");
+				var _width= Math.ceil(srcTd.width());// 取得最小整数的宽度
+				console.info("src:" + srcTd.width());
+				srcTd.width(_width)// 自己再设置宽度，防止自动宽度的小数问题
+				tarTh.width(_width);
+				console.info("tar:" + tarTh.width());
+			}
+
+		});
+	}
+
+	function setTheadBorder(){//设置标题列的边框，可以css设置
+		var ths= $("#thead_table thead tr:eq(0) > th");
+		jQuery.each(ths, function(index_, th_){
+			var _first= ((index_ === 0) ? true : false);
+			var _css= {};
+			if(!_first){
+				$(th_).css({
+					"border-left-width":"0px"
+				});
+			}
+		});
+	}
+
+	function setTbodyBorder(){//设置内容列的边框，可以css设置
+		var _trs= $("#data_table tbody tr");
+		jQuery.each(_trs, function(tr_index_, tr_){
+			var _tr= $(tr_);
+			_tds= _tr.find("td");
+			jQuery.each(_tds, function(td_index_, td_){
+				var _last_td= (td_index_ >= (_tds.length - 1) ? true : false);
+				var _css= {};
+				_css["border-top-width"]= "0px";
+				if(!_last_td){
+					_css["border-right-width"]= "0px";
+				}
+				$(td_).css(_css);
+			});
+		});
+	}
+</script>
+<style type="text/css">
+table thead {
+	table-layout: fixed;
+	background-color: #FF00AA;
+}
+/**必须设置**/
+table tbody  tr td, table thead tr th {
+	border: 1px solid #000000; /* 设置边框 */
+}
+</style>
+</head>
+
+<body>
+	<br>
+	<br>
+	<br>
+	<br>
+	<!-- 必须设置  -->
+	<div id="container" style="height: 300px; position: absolute; left: 50px; top: 50px; right: 50px; bottom: 50px; display: block;">
+		<table id="thead_table" cellpadding="0" cellspacing="0" border="0" width="100%">
+			<thead>
+				<tr>
+					<th>指标编号</th>
+					<th>指标展示名称</th>
+					<th>本期值</th>
+					<th>去年同期</th>
+				</tr>
+			</thead>
+		</table>
+		<!-- 必须设置  -->
+		<div id="data_scrollbar" style="overflow: auto; height: 200px;">
+			<!-- 必须设置  -->
+			<table id="data_table" cellpadding="0" cellspacing="0" width="100%" border="0">
+				<tbody>
+					<tr>
+						<td>B0202011046</td>
+						<td>1.利息净收入</td>
+						<td>73.92</td>
+						<td>-28.06</td>
+					</tr>
+					<tr>
+						<td>B0202011001</td>
+						<td>1.1利息收入</td>
+						<td>354.72</td>
+						<td>167.84</td>
+					</tr>
+					<tr>
+						<td>B0202011003</td>
+						<td>1.1.1金融机构往来利息收入</td>
+						<td>61.84</td>
+						<td>76.21</td>
+					</tr>
+					<tr>
+						<td>B0202011002</td>
+						<td>1.1.2贷款利息收入</td>
+						<td>107.83</td>
+						<td>91.63</td>
+					</tr>
+					<tr>
+						<td>B0202011004</td>
+						<td>1.1.3其他利息收入</td>
+						<td>185.05</td>
+						<td>0.00</td>
+					</tr>
+					<tr>
+						<td>B0202013003</td>
+						<td>1.2利息支出</td>
+						<td>280.80</td>
+						<td>195.90</td>
+					</tr>
+					<tr>
+						<td>B0202013004</td>
+						<td>1.2.1金融机构往来利息支出</td>
+						<td>169.98</td>
+						<td>132.30</td>
+					</tr>
+					<tr>
+						<td>B0202013005</td>
+						<td>1.2.2存款利息支出</td>
+						<td>110.81</td>
+						<td>63.60</td>
+					</tr>
+					<tr>
+						<td>B0202013006</td>
+						<td>1.2.3其他利息支出</td>
+						<td>0.02</td>
+						<td>0.00</td>
+					</tr>
+					<tr>
+						<td>B0202011042</td>
+						<td>2.手续费及佣金净收入</td>
+						<td>10.29</td>
+						<td>7.48</td>
+					</tr>
+					<tr>
+						<td>B0202011018</td>
+						<td>2.1手续费及佣金收入</td>
+						<td>10.86</td>
+						<td>7.85</td>
+					</tr>
+					<tr>
+						<td>B0202013001</td>
+						<td>2.2手续费及佣金支出</td>
+						<td>0.57</td>
+						<td>0.37</td>
+					</tr>
+					<tr>
+						<td>B0202011005</td>
+						<td>3.其他业务收入</td>
+						<td>30.31</td>
+						<td>21.74</td>
+					</tr>
+					<tr>
+						<td>B0202013012</td>
+						<td>4.营业支出</td>
+						<td>42.87</td>
+						<td>33.91</td>
+					</tr>
+					<tr>
+						<td>B0202013009</td>
+						<td>4.1业务及管理费</td>
+						<td>34.06</td>
+						<td>27.00</td>
+					</tr>
+					<tr>
+						<td>B0202013008</td>
+						<td>4.1.1其中：工资薪金支出</td>
+						<td>12.52</td>
+						<td>9.35</td>
+					</tr>
+					<tr>
+						<td>B0202013011</td>
+						<td>4.2营业税金及附加</td>
+						<td>8.35</td>
+						<td>6.91</td>
+					</tr>
+					<tr>
+						<td>B0202013007</td>
+						<td>4.3其他营业支出</td>
+						<td>0.46</td>
+						<td>0.00</td>
+					</tr>
+					<tr>
+						<td>B0202011006</td>
+						<td>5.投资收益</td>
+						<td>31.70</td>
+						<td>107.71</td>
+					</tr>
+					<tr>
+						<td>B0202011013</td>
+						<td>5.1债券投资利息收入</td>
+						<td>29.19</td>
+						<td>23.26</td>
+					</tr>
+					<tr>
+						<td>B0202011014</td>
+						<td>5.2股权投资收益</td>
+						<td>0.00</td>
+						<td>0.00</td>
+					</tr>
+					<tr>
+						<td>B0202011015</td>
+						<td>5.3股权投资收益</td>
+						<td>0.11</td>
+						<td>0.01</td>
+					</tr>
+					<tr>
+						<td>B0202011016</td>
+						<td>5.4其他投资收益</td>
+						<td>2.40</td>
+						<td>84.44</td>
+					</tr>
+					<tr>
+						<td>B0202011050</td>
+						<td>6.营业外净收入</td>
+						<td>0.26</td>
+						<td>-0.05</td>
+					</tr>
+					<tr>
+						<td>B0202011048</td>
+						<td>6.1营业外收入</td>
+						<td>0.38</td>
+						<td>0.11</td>
+					</tr>
+					<tr>
+						<td>B0202011049</td>
+						<td>6.1.1其中：处置抵债资产收入</td>
+						<td>0.00</td>
+						<td>0.00</td>
+					</tr>
+					<tr>
+						<td>B0202013013</td>
+						<td>6.2营业外支出</td>
+						<td>0.12</td>
+						<td>0.16</td>
+					</tr>
+					<tr>
+						<td>B0202015001</td>
+						<td>7.扣除资产减值损失前的利润总额</td>
+						<td>103.61</td>
+						<td>74.92</td>
+					</tr>
+					<tr>
+						<td>B0202013014</td>
+						<td>7.1减：资产减值损失</td>
+						<td>7.72</td>
+						<td>3.38</td>
+					</tr>
+					<tr>
+						<td>B0202015002</td>
+						<td>8.扣除资产减值损失后的利润总额</td>
+						<td>95.88</td>
+						<td>71.54</td>
+					</tr>
+					<tr>
+						<td>B0202013015</td>
+						<td>8.1减：所得税</td>
+						<td>16.09</td>
+						<td>11.29</td>
+					</tr>
+					<tr>
+						<td>B0202011011</td>
+						<td>9.少数股东损益</td>
+						<td>0.00</td>
+						<td>0.00</td>
+					</tr>
+					<tr>
+						<td>B0202015003</td>
+						<td>10.净利润</td>
+						<td>79.80</td>
+						<td>59.87</td>
+					</tr>
+					<tr>
+						<td>V0001</td>
+						<td>附注项目：</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>B0202011047</td>
+						<td>营业净收入</td>
+						<td>146.22</td>
+						<td>108.88</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE HTML">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>dongFlv flash Player</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="language" content="en" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+</head>
+<body>
+  <div id="container">
+    <a href="http://www.macromedia.com/go/getflashplayer">Get the Flash Player</a> to see this player.
+  </div>
+  <script type="text/javascript" src="swfobject.js"></script>
+  <script type="text/javascript">
+			var s1= new SWFObject("player.swf", "_embed_id", "500", "400", "9", "#FFFFFF");
+			s1.addParam("allowfullscreen", "true");
+			s1.addParam("allowscriptaccess", "always");
+			s1.addParam("flashvars", "file=test.swf");
+			s1.write("container");
+		</script>
+</body>
+</html>

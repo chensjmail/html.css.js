@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>canvas test</title>
+<script type="text/javascript">
+	function test(){
+		var canvas= document.getElementById('myCanvas');
+		var context;
+		if(canvas.getContext){
+			context= canvas.getContext('2d');
+		}
+		var posX= Math.round(canvas.width * Math.random());
+		var synbolX= "+";
+		var posY= Math.round(canvas.height * Math.random());
+		var synbolY= "+";
+		var radius= 1;
+		var synbolR= "+";
+
+		setInterval(function(){
+			pilot();
+
+			render();
+		}, 0);
+
+		function render(){
+			context.fillStyle= "black";
+			context.fillRect(0, 0, canvas.width, canvas.height);
+			//阴影
+			// 			context.shadowOffsetX= 20; // 设置水平位移
+			// 			context.shadowOffsetY= 0; // 设置垂直位移
+			// 			context.shadowBlur= 2; // 设置模糊度
+			// 			context.shadowColor= "rgba(255,0,0,0.1)"; // 设置阴影颜色
+
+			context.beginPath();
+
+			// 			var myGradient= context.createLinearGradient(posX, posY, 0, 0);//线性渐变
+			var myGradient= context.createRadialGradient(posX, posY, 10, posX, posY, radius + 10);//放射性渐变
+			myGradient.addColorStop(0, "#FF9600");
+			// 			myGradient.addColorStop(0.5, "#887C7C");
+			myGradient.addColorStop(1, "white");
+			context.fillStyle= myGradient;
+			// 			context.fillStyle= "white";
+
+			context.arc(posX, posY, radius, 0, Math.PI * 2, true);
+
+			context.closePath();
+
+			context.fill();
+		}
+
+		function setPos(){
+			var _stepX= 1;
+			posX= eval(posX + synbolX + _stepX);
+			var _stepY= 0.25;
+			posY= eval(posY + synbolY + _stepY);
+		}
+
+		function pilot(){
+			setPos();
+
+			var _tmp_posX= eval(posX + synbolX + radius);
+			if(_tmp_posX<=0 || _tmp_posX>= canvas.width){
+				synbolX= (synbolX === "+" ? "-" : "+");
+				pilotR();
+			}
+			var _tmp_posY= eval(posY + synbolY + radius);
+			if(_tmp_posY<=0 || _tmp_posY>= canvas.height){
+				synbolY= (synbolY === "+" ? "-" : "+");
+				pilotR();
+			}
+		}
+
+		function setR(){
+			var _stepR= 1;
+			var _tmp_radius= eval(radius + synbolR + _stepR);
+
+			var _tmp_posX= eval(posX + synbolX + _tmp_radius);
+			if(_tmp_posX<=0 || _tmp_posX>= canvas.width){
+				return;
+			}
+			var _tmp_posY= eval(posY + synbolY + _tmp_radius);
+			if(_tmp_posY<=0 || _tmp_posY>= canvas.height){
+				return;
+			}
+			radius= _tmp_radius;
+		}
+
+		function pilotR(){
+			setR();
+
+			var _tmp_diameter= radius * 2;
+			if(radius <= 1){
+				synbolR= "+";
+				radius= 1;
+			}else{
+				if(_tmp_diameter >= canvas.width){
+					synbolR= "-";
+					radius= canvas.width / 2;
+				}else if(_tmp_diameter >= canvas.height){
+					synbolR= "-";
+					radius= canvas.height / 2;
+				}
+			}
+		}
+	}
+</script>
+</head>
+<body onload="test();">
+  <canvas id="myCanvas" width="400" height="200">
+    您的浏览器不支持canvas！
+</canvas>
+</body>
+</html>

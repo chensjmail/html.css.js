@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>html5 video 视频播放</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="../jquery/jquery2.js"></script>
+<script type="text/javascript">
+	function playTutorials(this_li_){
+		var _li= $(this_li_);
+
+		var _container= $("#videoContainer");
+		var htmls= [];
+		htmls.push('<video controls="controls" preload="preload">');
+		htmls.push('<source src="' + _li.attr("prefixName") + '.webm" type="video/webm" />');
+		htmls.push('<source src="' + _li.attr("prefixName") + '.mp4" type="video/mp4" />');
+		htmls.push(' 您的浏览器不支持 video 标签。');
+		htmls.push('</video>');
+		_container.html(htmls.join(""));
+	}
+</script>
+</head>
+<body>
+  <div id="tutorials_menu">
+    <ul>
+      <li prefixName="test" onclick="playTutorials(this);">指南1</li>
+      <li prefixName="test" onclick="playTutorials(this);">指南2</li>
+    </ul>
+  </div>
+  <div id="videoContainer"></div>
+</body>
+</html>

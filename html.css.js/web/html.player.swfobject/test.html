@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html">
+<html>
+<head>
+<title>swfobject Player</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="language" content="en" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+<script src="js/swfobject.js" type="text/javascript"></script>
+<script src="../jquery/jquery2.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var flashvarsVideo= {
+		type:"video",
+		streamtype:"file",
+		server:"",//Used for rtmp streams
+		duration:"52",
+		poster:"",
+		autostart:"false",
+		logo:"",
+		logoposition:"top left",
+		logoalpha:"30",
+		logowidth:"130",
+		logolink:"http://jaris.sourceforge.net",
+		hardwarescaling:"false",
+		darkcolor:"000000",
+		brightcolor:"4c4c4c",
+		controlcolor:"FFFFFF",
+		hovercolor:"67A8C1"
+	};
+	var params= {
+		menu:"true",
+		scale:"noScale",
+		allowFullscreen:"true",
+		allowScriptAccess:"always",
+		bgcolor:"#000000",
+		quality:"high",
+		wmode:"opaque"
+	};
+	var attributes= {
+		id:"swfobjectPlayer"
+	};
+
+	$(function(){
+		$("#container").html(createContainer());
+		swfobject.embedSWF("test.swf", "swfobjectPlayerContent", "576px", "360px", "10.0.0", "expressInstall.swf", flashvarsVideo, params, attributes);
+	});
+	function next(){
+		swfobject.removeSWF("swfobjectPlayer");
+		$("#container").html(createContainer());
+		swfobject.embedSWF("test.swf", "swfobjectPlayerContent", "576px", "360px", "10.0.0", "expressInstall.swf", flashvarsVideo, params, attributes);
+	}
+
+	function createContainer(){
+		var defaultContainet= [];
+		defaultContainet.push('<div id="swfobjectPlayerContent">');
+		defaultContainet.push('    <p>Alternative content</p>');
+		defaultContainet.push('    <p>');
+		defaultContainet.push('      <a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>');
+		defaultContainet.push('    </p>');
+		defaultContainet.push('</div>');
+		return defaultContainet.join('');
+	}
+</script>
+</head>
+<body>
+  <input type="button" value="next" onclick="next();"></input>
+  <br />
+  <center>
+    <div id="container"></div>
+  </center>
+</body>
+</html>
