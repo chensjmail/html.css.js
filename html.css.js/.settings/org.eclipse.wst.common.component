@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="githubissue">
         <wb-resource deploy-path="/" source-path="/web"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <property name="java-output-path" value="/githubissue/build/classes"/>
-        <property name="context-root" value="javascripts"/>
+        <property name="context-root" value="html.css.js"/>
     </wb-module>
 </project-modules>
