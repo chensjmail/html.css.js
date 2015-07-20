@@ -1,0 +1,172 @@
+<html>
+<head>
+<title>fixed table title js Test</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<script src="../jquery/jquery2.js" type="text/javascript"></script>
+<script src="./tables.js" type="text/javascript"></script>
+<script>
+	$(function(){
+		function syncTheadWidth(){// 同步表头与内容列宽度
+			var _thead_table_= $('#head_container');
+			var _tbody_table_= $('#container')
+			var _ths_= _thead_table_.find(' > thead > tr:eq(0) > th')
+			var _tds_= _tbody_table_.find(' > tbody > tr:eq(0) > td');
+			var _twidth_= 0;
+			jQuery.each(_ths_, function(index_, th_){
+				var tarTh= $(th_);
+				var srcTd= $(_tds_[index_]);
+// 				if(index_ < (_ths_.length - 1)){// 最后一列不设置
+					if(srcTd.length == 0){//无数据
+						return;
+					}
+
+					var _innerWidth= Math.ceil(Math.max(srcTd.innerWidth(), tarTh.innerWidth()));// 取最大一个宽度,的最小整数的宽度
+					srcTd.innerWidth(_innerWidth);
+					tarTh.innerWidth(_innerWidth);
+					var _trs_= jQuery.each($("#container tbody tr"), function(tr_index_, tr_){
+						$(tr_).children("td:eq(" + index_ + ")").innerWidth(_innerWidth);
+					});
+
+					var _outerWidth= Math.ceil(Math.max(srcTd.outerWidth(), tarTh.outerWidth()));// 取最大一个宽度,的最小整数的宽度
+					srcTd.outerWidth(_outerWidth);
+					tarTh.outerWidth(_outerWidth);
+					var _trs_= jQuery.each($("#container tbody tr"), function(tr_index_, tr_){
+						$(tr_).children("td:eq(" + index_ + ")").outerWidth(_outerWidth);
+					});
+					_twidth_+= _outerWidth;
+					var _width= Math.ceil(Math.max(srcTd.width(), tarTh.width()));// 取最大一个宽度,的最小整数的宽度
+					srcTd.width(_width);
+					tarTh.width(_width);
+					var _trs_= jQuery.each($("#container tbody tr"), function(tr_index_, tr_){
+						$(tr_).children("td:eq(" + index_ + ")").width(_width);
+					});
+
+// 				}else{
+// 					_twidth_+= Math.max(srcTd.outerWidth(), tarTh.outerWidth());
+// 				}
+			});
+			_thead_table_.outerWidth(_twidth_);
+			_tbody_table_.outerWidth(_twidth_);
+		}
+		syncTheadWidth();
+
+		$('#container_body_srcoll').scroll(function(a, b, c, d){
+			$('#container_head_srcoll').scrollLeft($(this).scrollLeft());
+		});
+	});
+</script>
+
+</head>
+
+<body>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div id="container_table_container" style="width: 500px; height: 200px;">
+		<div id="container_head_srcoll" style="overflow-x: hidden; overflow-y: hidden;">
+			<table id="head_container" cellpadding="0" cellspacing="0" border="1" style="table-layout: fixed;">
+				<thead>
+					<tr>
+						<th align="left" style="word-break: keep-all; white-space: nowrap;">null2</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">中信银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">光大银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">兴业银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">华夏银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">平安银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">广发银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">恒丰银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">招商银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">民生银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">浙商银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">浦发银行</th>
+						<th align="right" style="word-break: keep-all; white-space: nowrap;">渤海银行</th>
+						<th style="width: 20px; background-color: #CDCDCD;"></th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div id="container_body_srcoll" style="overflow: auto; height: 161px">
+			<table id="container" cellpadding="0" cellspacing="0" border="1" style="table-layout: fixed;">
+				<tbody>
+					<tr id="B0201014043" style="cursor: pointer" class="odd">
+						<td class="strong">各项存款</td>
+						<td class="value">24964.48</td>
+						<td class="value">16819.49</td>
+						<td class="value">18918.22</td>
+						<td class="value">12684.95</td>
+						<td class="value">13441.95</td>
+						<td class="value">10150.46</td>
+						<td class="value">3527.8</td>
+						<td class="value">28237.57</td>
+						<td class="value">22863.71</td>
+						<td class="value">2955.02</td>
+						<td class="value">22469.99</td>
+						<td class="value">3520.77</td>
+					</tr>
+					<tr id="B0201014001" style="cursor: pointer">
+						<td class="strong">单位存款</td>
+						<td class="value">19120.42</td>
+						<td class="value">11100.02</td>
+						<td class="value">16158.03</td>
+						<td class="value">9433.42</td>
+						<td class="value">9646.18</td>
+						<td class="value">6589.86</td>
+						<td class="value">2592.24</td>
+						<td class="value">17199.74</td>
+						<td class="value">16335.28</td>
+						<td class="value">3107.39</td>
+						<td class="value">19128.44</td>
+						<td class="value">2825.17</td>
+					</tr>
+					<tr id="B0201014002" style="cursor: pointer" class="odd">
+						<td class="strong">个人存款</td>
+						<td class="value">4531.2479</td>
+						<td class="value">4142.0852</td>
+						<td class="value">3681.48</td>
+						<td class="value">2389.3553</td>
+						<td class="value">2295.131</td>
+						<td class="value">1971.5714</td>
+						<td class="value">1009.39</td>
+						<td class="value">8932.35</td>
+						<td class="value">4832.58</td>
+						<td class="value">219.97</td>
+						<td class="value">4622.74</td>
+						<td class="value">282.51</td>
+					</tr>
+					<tr id="B0201011044" style="cursor: pointer">
+						<td class="strong">各项贷款</td>
+						<td class="value">19502.32</td>
+						<td class="value">11604.67</td>
+						<td class="value">14447.86</td>
+						<td class="value">8791.4</td>
+						<td class="value">7930.95</td>
+						<td class="value">7580.31</td>
+						<td class="value">23424640.12</td>
+						<td class="value">18547.52</td>
+						<td class="value">17006.24</td>
+						<td class="value">2155.84</td>
+						<td class="value">16660.74</td>
+						<td class="value">1978.87</td>
+					</tr>
+					<tr id="B0201011065" style="cursor: pointer" class="odd">
+						<td class="strong">个人贷款</td>
+						<td class="value">5380.26</td>
+						<td class="value">4047.82</td>
+						<td class="value">3531.38</td>
+						<td class="value">1743.32</td>
+						<td class="value">3846.18</td>
+						<td class="value">3290.82</td>
+						<td class="value">266.78</td>
+						<td class="value">7915.21</td>
+						<td class="value">6417.46</td>
+						<td class="value">520.71</td>
+						<td class="value">3937.15</td>
+						<td class="value">288.29</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
