@@ -15,44 +15,44 @@
 			jQuery.each(_ths_, function(index_, th_){
 				var tarTh= $(th_);
 				var srcTd= $(_tds_[index_]);
-// 				if(index_ < (_ths_.length - 1)){// 最后一列不设置
-					if(srcTd.length == 0){//无数据
-						return;
-					}
 
-					var _innerWidth= Math.ceil(Math.max(srcTd.innerWidth(), tarTh.innerWidth()));// 取最大一个宽度,的最小整数的宽度
-					srcTd.innerWidth(_innerWidth);
-					tarTh.innerWidth(_innerWidth);
-					var _trs_= jQuery.each($("#container tbody tr"), function(tr_index_, tr_){
-						$(tr_).children("td:eq(" + index_ + ")").innerWidth(_innerWidth);
-					});
+				if(srcTd.length == 0){//无数据
+					return;
+				}
 
-					var _outerWidth= Math.ceil(Math.max(srcTd.outerWidth(), tarTh.outerWidth()));// 取最大一个宽度,的最小整数的宽度
-					srcTd.outerWidth(_outerWidth);
-					tarTh.outerWidth(_outerWidth);
-					var _trs_= jQuery.each($("#container tbody tr"), function(tr_index_, tr_){
-						$(tr_).children("td:eq(" + index_ + ")").outerWidth(_outerWidth);
-					});
-					_twidth_+= _outerWidth;
-					var _width= Math.ceil(Math.max(srcTd.width(), tarTh.width()));// 取最大一个宽度,的最小整数的宽度
-					srcTd.width(_width);
-					tarTh.width(_width);
-					var _trs_= jQuery.each($("#container tbody tr"), function(tr_index_, tr_){
-						$(tr_).children("td:eq(" + index_ + ")").width(_width);
-					});
+				var _innerWidth= Math.ceil(Math.max(srcTd.innerWidth(), tarTh.innerWidth()));// 取最大一个宽度,的最小整数的宽度
+				srcTd.innerWidth(_innerWidth);
+				tarTh.innerWidth(_innerWidth);
+				// 					var _trs_= jQuery.each($("#container tbody tr"), function(tr_index_, tr_){
+				// 						$(tr_).children("td:eq(" + index_ + ")").innerWidth(_innerWidth);
+				// 					});
 
-// 				}else{
-// 					_twidth_+= Math.max(srcTd.outerWidth(), tarTh.outerWidth());
-// 				}
+				var _outerWidth= Math.ceil(Math.max(srcTd.outerWidth(), tarTh.outerWidth()));// 取最大一个宽度,的最小整数的宽度
+				srcTd.outerWidth(_outerWidth);
+				tarTh.outerWidth(_outerWidth);
+				// 				var _trs_= jQuery.each($("#container tbody tr"), function(tr_index_, tr_){
+				// 					$(tr_).children("td:eq(" + index_ + ")").outerWidth(_outerWidth);
+				// 				});
+
+				_twidth_+= _outerWidth;
+
+				var _width= Math.ceil(Math.max(srcTd.width(), tarTh.width()));// 取最大一个宽度,的最小整数的宽度
+				srcTd.width(_width);
+				tarTh.width(_width);
+				// 				var _trs_= jQuery.each($("#container tbody tr"), function(tr_index_, tr_){
+				// 					$(tr_).children("td:eq(" + index_ + ")").width(_width);
+				// 				});
+
 			});
 			_thead_table_.outerWidth(_twidth_);
 			_tbody_table_.outerWidth(_twidth_);
 		}
-		syncTheadWidth();
 
 		$('#container_body_srcoll').scroll(function(a, b, c, d){
 			$('#container_head_srcoll').scrollLeft($(this).scrollLeft());
 		});
+
+		syncTheadWidth();
 	});
 </script>
 
