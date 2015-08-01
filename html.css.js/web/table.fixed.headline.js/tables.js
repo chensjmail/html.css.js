@@ -4,15 +4,10 @@
 var $tables$= {
 	/**
 	 * 绘制固定表头的表格
-	 * 
-	 * @param titles_
-	 *            array 列标题数据
-	 * @param datas_
-	 *            array 行数据
-	 * @param container_id_
-	 *            string 容器 div id(前缀)
-	 * @param linkage_flag_
-	 *            boolean 是否使用联动标识; true 是; flase 否;
+	 * @param titles_ array 列标题数据
+	 * @param datas_ array 行数据
+	 * @param container_id_ string 容器 div id(前缀)
+	 * @param linkage_flag_ boolean 是否使用联动标识; true 是; flase 否;
 	 */
 	render:function(titles_, datas_, container_id_, linkage_flag_){
 		// 样式名
@@ -44,6 +39,7 @@ var $tables$= {
 		 * 初始化 html 结构
 		 */
 		function init(){
+			Containers.main_container.empty();// 清空
 			// 添加表头
 			var _array= [];
 			_array.push('<div id="' + container_id_ + '_table_head_div" style="overflow: hidden">');
@@ -149,13 +145,9 @@ var $tables$= {
 
 		/**
 		 * 新建表格tr对象
-		 * 
-		 * @param _row_index_
-		 *            string 行索引
-		 * @param row_datas_
-		 *            Array 行数据
-		 * @param linkage_flag_
-		 *            是否使用联动标识; true 是; flase 否;
+		 * @param _row_index_ string 行索引
+		 * @param row_datas_ Array 行数据
+		 * @param linkage_flag_ 是否使用联动标识; true 是; flase 否;
 		 */
 		function createTr(_row_index_, row_datas_, linkage_flag_){
 			var _tr_style_name_= '';
@@ -175,13 +167,9 @@ var $tables$= {
 
 		/**
 		 * 新建表格td对象
-		 * 
-		 * @param col_index_
-		 *            string 列索引
-		 * @param col_data_
-		 *            string 列数据
-		 * @param linkage_flag_
-		 *            是否使用联动标识; true 是; flase 否;
+		 * @param col_index_ string 列索引
+		 * @param col_data_ string 列数据
+		 * @param linkage_flag_ 是否使用联动标识; true 是; flase 否;
 		 */
 		function createTd(col_index_, col_data_, linkage_flag_, is_ranking_){
 			var _td_style_name_= '';
@@ -255,11 +243,8 @@ var $tables$= {
 		/**
 		 * 取得表格实际宽度<br>
 		 * 注:列宽由标题列与内容列中,宽度最大的决定该列的宽度<br>
-		 * 
-		 * @param ths_
-		 *            array 表标题列列表
-		 * @param tds_
-		 *            array 表内容首列列表
+		 * @param ths_ array 表标题列列表
+		 * @param tds_ array 表内容首列列表
 		 */
 		function initActualWidths(ths_, tds_){
 			// 先将表格设置为:自动表格布局,取得各列(包括标题列)的最小宽度
@@ -291,11 +276,8 @@ var $tables$= {
 
 		/**
 		 * 初始化预设置列的宽度
-		 * 
-		 * @param ths_
-		 *            array 表标题列列表
-		 * @param tds_
-		 *            array 表内容首列列表
+		 * @param ths_ array 表标题列列表
+		 * @param tds_ array 表内容首列列表
 		 */
 		function initDefaultWidth(ths_, tds_){
 			var _sharing_value_= 0;
