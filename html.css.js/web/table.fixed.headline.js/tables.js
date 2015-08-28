@@ -8,12 +8,16 @@ var $tables$= {
 	 * @param datas_ array 行数据
 	 * @param container_id_ string 容器 div id(前缀)
 	 * @param linkage_flag_ boolean 是否使用联动标识; true 是; flase 否;
+	 * @param doDrillDownFun_ function 下钻的方法 <br>
 	 */
-	render:function(titles_, datas_, container_id_, linkage_flag_){
+	render:function(titles_, datas_, container_id_, linkage_flag_, doDrillDownFun_){
+		var HAND_THIS= this;
 		// 样式名
-		this.value_class= "value";
-		this.increase_class= "increase";
-		this.decrease_class= "decrease";
+		this.value_class= 'value';
+		this.increase_class= 'increase';
+		this.decrease_class= 'decrease';
+		this.disabled_class= 'disabled ';
+		this.strong_class= 'strong';
 
 		// 容器变量
 		var Containers= {// 容器对象
@@ -34,6 +38,19 @@ var $tables$= {
 			show_transverse_scrollber:false,// 是否出现横向滚动条
 			scroll_visible_width:0,// 滚动容器可用宽度(如有纵向滚动条则不包括滚动条的宽度)
 		};
+
+		if(!titles_ || titles_.length == 0 || !datas_ || datas_.length == 0){
+			addShowNodata();
+			return;
+		}
+
+		/**
+		 * 显示无数据友好提示
+		 */
+		function addShowNodata(){
+			Containers.main_container.empty();// 清空
+			Containers.main_container.append('<div id="table_box_nodata" class="nodata"><div class="text">监管数据仍在处理，小管正在努力！</div></div>');
+		}
 
 		/**
 		 * 初始化 html 结构
@@ -101,8 +118,8 @@ var $tables$= {
 				/*
 				 * 标题不换行 <pre> word-break: keep-all; white-space: nowrap;</pre>
 				 */
-				// var _th_style_= 'word-break: keep-all; white-space: nowrap;'
-				var _th_style_= 'border-bottom: 0px solid #6ea1be; border-right: 0px solid #6ea1be; border-top: 1px solid #6ea1be; border-left: 1px solid #6ea1be;';
+				var _th_style_= 'word-break: keep-all; white-space: nowrap;'
+				_th_style_+= 'border-bottom: 0px solid #6ea1be; border-right: 0px solid #6ea1be; border-top: 1px solid #6ea1be; border-left: 1px solid #6ea1be;';
 				if(linkage_flag_ && _title_index_ == 0){
 					continue;
 				}else{
@@ -128,15 +145,30 @@ var $tables$= {
 			Containers.table_body_tbody.empty();// 清空表格数据部分
 			for(var _row_index_= 0;_row_index_ < datas_.length;_row_index_++){
 				var _row_datas_= datas_[_row_index_];
-				var _tr_= createTr(_row_index_, _row_datas_, linkage_flag_);
+				var _is_disabled_= false;
+				// 定制指标编码以D开头,则该行不可用
+				if(_row_datas_[0].substring(0, 1).toUpperCase() == 'D'){// 显示为不可用
+					_is_disabled_= true;
+				}
+				var _tr_= createTr(_row_index_, _row_datas_, {
+					linkage_flag:linkage_flag_
+				});
+				// 定制指标编码以G开头,则该指标可下钻
+				var _is_drill_down_= (linkage_flag_ && (doDrillDownFun_ && _row_datas_[0].substring(0, 1).toUpperCase() == 'G')) ? true : false;
 				for(var _col_index_= 0;_col_index_ < titles_.length;_col_index_++){
 					var _td_style_name_
 					if(_col_index_ == 0 && linkage_flag_){
 						continue;
 					}
 					var _col_data= _row_datas_[_col_index_];
-					var _is_ranking_= (titles_[_col_index_].indexOf('排名') == titles_[_col_index_].length - 2) ? true : false;
-					var _td_= createTd(_col_index_, _col_data, linkage_flag_, _is_ranking_);
+					// 标题为"名次"并且值存在"+ -"号时显示趋势
+					var _is_ranking_= (titles_[_col_index_].indexOf('名次') == titles_[_col_index_].length - 2) ? true : false;
+					var _td_= createTd(_col_index_, _col_data, {
+						linkage_flag:linkage_flag_,
+						is_ranking:_is_ranking_,
+						is_drill_down:_is_drill_down_,
+						is_disabled:_is_disabled_
+					});
 					_tr_.append(_td_);
 				}
 				Containers.table_body_tbody.append(_tr_);
@@ -147,9 +179,10 @@ var $tables$= {
 		 * 新建表格tr对象
 		 * @param _row_index_ string 行索引
 		 * @param row_datas_ Array 行数据
-		 * @param linkage_flag_ 是否使用联动标识; true 是; flase 否;
+		 * @param option_ 设置选项<br>
+		 * linkage_flag 是否使用联动标识; true 是; flase 否;
 		 */
-		function createTr(_row_index_, row_datas_, linkage_flag_){
+		function createTr(_row_index_, row_datas_, option_){
 			var _tr_style_name_= '';
 			var _tr_style_= '';
 			var _tr_id_= '';
@@ -157,7 +190,8 @@ var $tables$= {
 			if(num == 0){// 偶数行样式
 				_tr_style_name_= 'odd';
 			}
-			if(linkage_flag_ && row_datas_[0].indexOf("V") < 0 && row_datas_[0].indexOf("F") < 0){// 可联动的表格
+			// 可联动的表格,忽略"V","F"开头的指标
+			if(option_.linkage_flag && row_datas_[0].indexOf("V") < 0 && row_datas_[0].indexOf("F") < 0){// 可联动的表格
 				_tr_style_= 'cursor:pointer;';
 				_tr_id_= 'id="' + row_datas_[0] + '"';
 			}
@@ -169,35 +203,57 @@ var $tables$= {
 		 * 新建表格td对象
 		 * @param col_index_ string 列索引
 		 * @param col_data_ string 列数据
-		 * @param linkage_flag_ 是否使用联动标识; true 是; flase 否;
+		 * @param option_ 设置选项<br>
+		 * linkage_flag 是否使用联动标识; true 是; flase 否;<br>
+		 * is_ranking 是否使用名次趋势图标; true 是; flase 否;<br>
+		 * is_drill_down 是否使用下钻标识; true 是; flase 否;<br>
+		 * is_disabled 是否显示为不可用; true 是; flase 否;<br>
 		 */
-		function createTd(col_index_, col_data_, linkage_flag_, is_ranking_){
+		function createTd(col_index_, col_data_, option_){
 			var _td_style_name_= '';
 			var _td_style_= 'border-bottom: 0px solid #cccccc; border-right: 0px solid #cccccc; border-top: 1px solid #cccccc; border-left: 1px solid #cccccc;';
-			if(col_index_ == 0 || (linkage_flag_ && col_index_ == 1)){// 第一列不换行
+			if(col_index_ == 0 || (option_.linkage_flag && col_index_ == 1)){// 第一列不换行
 				_td_style_+= 'word-break: keep-all; white-space: nowrap; ';
 			}
 			var _ranking_= '';
 			if(col_data_.toString().indexOf("+") != -1 || (col_data_.toString().indexOf("-") == -1 && col_data_.toString().lastIndexOf("%") == col_data_.toString().length - 1)){
-				_td_style_name_= this.increase_class;
+				_td_style_name_= HAND_THIS.increase_class;
 			}else if(col_data_.toString().indexOf("-") != -1){
-				_td_style_name_= this.decrease_class;
+				_td_style_name_= HAND_THIS.decrease_class;
 			}else if(!isNaN(col_data_)){
-				_td_style_name_= this.value_class;
+				_td_style_name_= HAND_THIS.value_class;
 			}else if(col_data_.toString().indexOf("+") == -1 && col_data_.toString().indexOf("-") == -1){
-				if(linkage_flag_ && col_index_ == 1){
-					_td_style_name_= 'strong';
+				if(option_.linkage_flag && col_index_ == 1){
+					_td_style_name_= HAND_THIS.strong_class;
 				}
 				col_data_= col_data_.replace(/\s+/g, '&nbsp;');// 去除敏感符
 			}
+			if(option_.is_disabled){
+				_td_style_name_+= ' ' + HAND_THIS.disabled_class;
+			}
 			var _td_= jQuery('<td class="' + _td_style_name_ + '" style="' + _td_style_ + '"></td>');
 			_td_.append(col_data_);
-			if(is_ranking_){
+			if(option_.is_ranking){
 				if(col_data_.toString().indexOf('-') == 0){
 					_td_.append('&nbsp;<img style="width: 13px; height: 12px; vertical-align: middle;" src="../images/ranking_down.png" />');
 				}else if(col_data_.toString().indexOf('+') == 0){
 					_td_.append('&nbsp;<img style="width: 13px; height: 12px; vertical-align: middle;" src="../images/ranking_up.png" />');
 				}
+			}
+			if(col_index_ == 1 && option_.is_drill_down){
+				_td_.append('&nbsp;');
+				var _img_= jQuery('<img style="width: 35px; height: 25px; vertical-align: middle;"></img>');
+				_img_.attr('src', '../images/drill.down.png');
+				_img_.attr('title', '点击图标下钻数据');
+				_img_.click(function(){
+					var _reportIndex_= jQuery(this).parents('tr').attr('id');
+					var _reportIndexName_= jQuery(this).parent().text().trim();
+					var paramMap= {};
+					paramMap['reportIndex']= _reportIndex_;
+					paramMap['reportIndexName']= _reportIndexName_;
+					doDrillDownFun_.call(this, paramMap);
+				});
+				_td_.append(_img_);
 			}
 			return _td_;
 		}
@@ -339,7 +395,9 @@ var $tables$= {
 				Containers.table_head_scroll_div.scrollLeft(jQuery(this).scrollLeft());
 			});
 		}
-
+		/**
+		 * 重置容器大小
+		 */
 		function resize(){
 			syncColumnWidth();
 		}
