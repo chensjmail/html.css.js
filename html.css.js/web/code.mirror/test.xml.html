@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="./code.mirror/lib/codemirror.css">
+<link rel="stylesheet" href="./code.mirror/addon/hint/show-hint.css">
+<link rel="stylesheet" href="./code.mirror//addon/display/fullscreen.css">
+<script src="./code.mirror/lib/codemirror.js"></script>
+<script src="./code.mirror/addon/hint/show-hint.js"></script>
+<script src="./code.mirror/addon/hint/xml-hint.js"></script>
+<script src="./code.mirror/addon/display/fullscreen.js"></script>
+<script src=".//code.mirror/addon/format/formatting.js"></script>
+<script src="./code.mirror//addon/selection/active-line.js"></script>
+<script src="./code.mirror/mode/xml/xml.js"></script>
+<script type="text/javascript">
+	window.onload= function(){
+
+		var dummy= {
+			attrs:{
+				color:["red", "green", "blue", "purple", "white", "black", "yellow"],
+				size:["large", "medium", "small"],
+				description:null
+			},
+			children:[]
+		};
+
+		var tags= {
+			"!top":["top", "csj"],
+			// 			"!attrs":{
+			// 				id:null,
+			// 				class:["A", "B", "C"]
+			// 			},
+			top:{
+				attrs:{
+					lang:["en", "de", "fr", "nl"],
+					freeform:null
+				},
+				children:["animal", "plant"]
+			},
+			csj:{
+				attrs:{
+					c:['c1', 'c2', 'c3'],
+					s:['s1', 's2'],
+					j:null
+				},
+				children:["cy", "czr"]
+			},
+			animal:{
+				attrs:{
+					name:null,
+					isduck:["yes", "no"]
+				},
+				children:["wings", "feet", "body", "head", "tail"]
+			},
+			plant:{
+				attrs:{
+					name:null
+				},
+				children:["leaves", "stem", "flowers"]
+			},
+			wings:dummy,
+			feet:dummy,
+			body:dummy,
+			head:dummy,
+			tail:dummy,
+			leaves:dummy,
+			stem:dummy,
+			flowers:dummy
+		};
+
+		function completeAfter(cm, pred){
+			var cur= cm.getCursor();
+			if(!pred || pred()) setTimeout(function(){
+				if(!cm.state.completionActive) cm.showHint({
+					completeSingle:false
+				});
+			}, 100);
+			return CodeMirror.Pass;
+		}
+
+		function completeIfAfterLt(cm){
+			return completeAfter(cm, function(){
+				var cur= cm.getCursor();
+				return cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur) == "<";
+			});
+		}
+
+		function completeIfInTag(cm){
+			return completeAfter(cm, function(){
+				var tok= cm.getTokenAt(cm.getCursor());
+				if(tok.type == "string" && (!/['"]/.test(tok.string.charAt(tok.string.length - 1)) || tok.string.length == 1)) return false;
+				var inner= CodeMirror.innerMode(cm.getMode(), tok.state).state;
+				return inner.tagName;
+			});
+		}
+
+		window.editor= CodeMirror.fromTextArea(document.getElementById("code"), {
+			mode:"xml",
+			styleActiveLine:true,
+			lineNumbers:true,
+			lineWrapping:true,
+			extraKeys:{
+				"'<'":completeAfter,
+				"'/'":completeIfAfterLt,
+				"' '":completeIfInTag,
+				"'='":completeIfInTag,
+				"Ctrl-Space":"autocomplete",
+				'Shift-Ctrl-Alt-F':function(){
+					var range= (function getSelectedRange(){
+						return {
+							from:editor.getCursor(true),
+							to:editor.getCursor(false)
+						};
+					})();
+					editor.autoFormatRange(range.from, range.to);
+				},
+				"F11":function(cm){
+					cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+				},
+				"Esc":function(cm){
+					if(cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+				}
+			},
+			hintOptions:{
+				schemaInfo:tags
+			}
+		});
+		window.editor.setValue('')
+	};
+
+	function aa(){
+		alert(window.editor.getValue());
+	}
+</script>
+</head>
+<body>
+	<form>
+		<textarea id="code" name="code"></textarea>
+	</form>
+	<input type="button" onclick="aa();" name="aa" title="aaa" value="aaa">
+</body>
+</html>
